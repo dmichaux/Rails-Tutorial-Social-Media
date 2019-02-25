@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class MicropostsController < ApplicationController
-  before_action :logged_in_user, only: [:create, :destroy]
+  before_action :logged_in_user, only: %i[create destroy]
   before_action :correct_user, only: :destroy
 
   def create
     @micropost = current_user.microposts.build(micropost_params)
     if @micropost.save
-      flash[:success] = "Post created"
+      flash[:success] = 'Post created'
       redirect_to root_url
     else
       @feed_items = []
@@ -15,7 +17,7 @@ class MicropostsController < ApplicationController
 
   def destroy
     @micropost.destroy
-    flash[:success] = "Post deleted"
+    flash[:success] = 'Post deleted'
     redirect_back(fallback_location: root_url)
   end
 
