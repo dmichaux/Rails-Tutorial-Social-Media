@@ -1,33 +1,32 @@
 require 'test_helper'
 
 class UsersSignupTest < ActionDispatch::IntegrationTest
+  def setup
+    ActionMailer::Base.deliveries.clear
+  end
 
-	def setup
-		ActionMailer::Base.deliveries.clear
-	end
+  test "invalid sign-up information" do
+    get signup_path
+    assert_no_difference "User.count" do
+      post users_path, params: { user: { name: "",
+                                         email: "user@invalid",
+                                         password: "foo",
+                                         password_confirmation: "bar" } }
+    end
+    assert_template "users/new"
+    assert_select "div#error_explanation"
+    assert_select "div.field_with_errors"
+  end
 
-	test "invalid sign-up information" do
-		get signup_path
-		assert_no_difference "User.count" do
-			post users_path, params: { user: { name:  "",
-																				 email: "user@invalid",
-																				 password: 						 "foo",
-																				 password_confirmation: "bar" } }
-		end
-		assert_template "users/new"
-		assert_select "div#error_explanation"
-		assert_select "div.field_with_errors"
-	end
-
-	test "valid sign-up information with account activation" do
-		get signup_path
-		assert_difference "User.count", 1 do
-			post users_path, params: { user: { name:  "Valid Example",
-																				 email: "example@valid.yeah",
-																				 password: 						  "validpass",
-																				 password_confirmation: "validpass" } }
-		end
-		assert_equal 1, ActionMailer::Base.deliveries.size
+  test "valid sign-up information with account activation" do
+    get signup_path
+    assert_difference "User.count", 1 do
+      post users_path, params: { user: { name: "Valid Example",
+                                         email: "example@valid.yeah",
+                                         password: "validpass",
+                                         password_confirmation: "validpass" } }
+    end
+    assert_equal 1, ActionMailer::Base.deliveries.size
     user = assigns(:user)
     assert_not user.activated?
     # Try to log in before activation.
@@ -45,5 +44,5 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_template 'users/show'
     assert is_logged_in?
-	end
+  end
 end

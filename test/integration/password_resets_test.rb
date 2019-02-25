@@ -1,13 +1,12 @@
 require 'test_helper'
 
 class PasswordResetsTest < ActionDispatch::IntegrationTest
-
-	def setup
+  def setup
     ActionMailer::Base.deliveries.clear
     @user = users(:michael)
-	end
+  end
 
-	test "password resets" do
+  test "password resets" do
     get new_password_reset_path
     assert_template 'password_resets/new'
     # Invalid email
@@ -41,19 +40,19 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
     # Invalid password & confirmation
     patch password_reset_path(user.reset_token),
           params: { email: user.email,
-                    user: { password:              "foobaz",
+                    user: { password: "foobaz",
                             password_confirmation: "barquux" } }
     assert_select 'div#error_explanation'
     # Empty password
     patch password_reset_path(user.reset_token),
           params: { email: user.email,
-                    user: { password:              "",
+                    user: { password: "",
                             password_confirmation: "" } }
     assert_select 'div#error_explanation'
     # Valid password & confirmation
     patch password_reset_path(user.reset_token),
           params: { email: user.email,
-                    user: { password:              "foobaz",
+                    user: { password: "foobaz",
                             password_confirmation: "foobaz" } }
     assert is_logged_in?
     assert_not flash.empty?
