@@ -1,0 +1,44 @@
+require: rubocop-rspec
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - bin/*
+    - config/routes.rb
+    - db/**/*
+    - log/**/*
+    - public/**/*
+    - templates/**/*
+    - lib/templates/**/*
+    - tmp/**/*
+    - vendor/**/*
+    - bin/**/*
+    - Capfile
+    - Gemfile
+Metrics/LineLength:
+  Max: 120
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # contaning a URI to be longer than Max.
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+Metrics/AbcSize:
+  Max: 32
+Metrics/BlockLength:
+  ExcludedMethods:
+    - configure
+    - refine
+Style/Documentation:
+  Enabled: false
+Style/SignalException:
+  EnforcedStyle: semantic
+RSpec/AnyInstance:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
+Rails:
+  Enabled: true
+Rails/UnknownEnv:
+  Enabled: false
+Style/Lambda:
+  Enabled: false
